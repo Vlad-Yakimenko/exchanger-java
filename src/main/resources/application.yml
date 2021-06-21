@@ -1,0 +1,7 @@
+#kafka:
+#  bootstrap.address: kafka:9092
+#  standard.topic: exchanger-standard
+#  standard.groupId: test
+#logging:
+#  level: debug
+#

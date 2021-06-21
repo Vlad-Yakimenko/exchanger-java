@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  #  zookeeper:
+  #    image: 'bitnami/zookeeper'
+  #    container_name: zookeeper
+  #    environment:
+  #      - ALLOW_ANONYMOUS_LOGIN=yes
+  #    ports:
+  #      - 2181:2181
+  #
+  #  kafka:
+  #    image: 'bitnami/kafka'
+  #    container_name: kafka-broker
+  #    depends_on:
+  #      - zookeeper
+  #    environment:
+  #      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+  #      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+  #      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+  #      - ALLOW_PLAINTEXT_LISTENER=yes
+  #    ports:
+  #      - 9092:9092
+
+  rabbit-mq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:5672" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  exchanger-java:
+    image: "exchanger-java"
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    environment:
+      - "SPRING_PROFILES_ACTIVE=cloud-rabbit-mq"
+      #      - "SPRING_PROFILES_ACTIVE=cloud-kafka"
+    depends_on:
+      - rabbit-mq
+      #      - kafka
+      #      - zookeeper
+    links:
+      - rabbit-mq

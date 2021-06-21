@@ -1,0 +1,21 @@
+spring:
+  rabbitmq:
+    host: rabbit-mq
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: exchanger-standard
+          content-type: application/json
+        input:
+          destination: exchanger-standard
+          content-type: application/json
+          group: testGroup
+      default-binder: rabbit
+
+kafka:
+  cloud:
+    enabled: true
